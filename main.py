@@ -27,5 +27,3 @@ run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Terran, BigBoy()), 
     Computer(Race.Terran, Difficulty.Easy)
 ], realtime=True)
-
-#dddd
