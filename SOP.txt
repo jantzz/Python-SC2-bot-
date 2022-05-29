@@ -1,0 +1,7 @@
+Steps to commit changes:
+    1. Save current file
+    2. Github Desktop
+    3. Check if correct repository (Python-SC2-bot-)
+    4. Put in commit description
+    5. Commit to branch (YOUR OWN BRANCH)
+    6. Publish branch (i.e Push to origin)
