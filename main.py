@@ -9,7 +9,7 @@ from sc2.constants import COMMANDCENTER, SCV, SUPPLYDEPOT, REFINERY, BARRACKS, M
 class BigBoy(sc.BotAI):
     async def on_step(self, iteration):
         await self.distribute_workers()
-        await self.send_scout()
+        #await self.send_scout()
 
         if self.supply_workers > 16:
             await self.build_workers()
@@ -27,10 +27,10 @@ class BigBoy(sc.BotAI):
         await self.attack()
     
     #scouting with worker
-    async def send_scout(self):
-        worker = self.units(SCV).ready
-        if worker.exists:
-            await worker.move(self.enemy_start_locations)
+    #async def send_scout(self):
+     #   worker = self.units(SCV).ready
+      #  if worker.exists:
+       #     await worker.move(self.enemy_start_locations)
 
     #building workers
     async def build_workers(self):
