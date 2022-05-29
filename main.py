@@ -30,7 +30,7 @@ class BigBoy(sc.BotAI):
     async def send_scout(self):
         worker = self.units(SCV).ready
         if worker.exists:
-            await worker.attack(self.enemy_start_locations)
+            await worker.move(self.enemy_start_locations)
 
     #building workers
     async def build_workers(self):
