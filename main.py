@@ -1,2 +1,3 @@
 #github page:https://github.com/Dentosal/python-sc2
-# documentation: https://github.com/Dentosal/python-sc2/wiki 
+# documentation: https://github.com/Dentosal/python-sc2/wiki
+print("Hello w0rld")
