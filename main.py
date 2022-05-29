@@ -62,7 +62,7 @@ class BigBoy(sc.BotAI):
     #building refineries 
     async def build_vespene(self):
         for ccs in self.units(COMMANDCENTER).ready: 
-            vesp = self.state.vespene_geyser.closer_than(ccs, 15.0)
+            vesp = self.state.vespene_geyser.closer_than(15.0, ccs)
             for v in vesp: 
                 if not self.can_afford(REFINERY):
                     break
