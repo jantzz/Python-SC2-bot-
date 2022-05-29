@@ -63,14 +63,14 @@ class BigBoy(sc.BotAI):
     #building refineries 
     async def build_vespene(self):
         for ccs in self.units(COMMANDCENTER).ready: 
-            vesp = self.state.vespene_geyser.closer_than(15.0, ccs)
+            vesp = self.state.vespene_geyser.closer_than(10.0, ccs)
             for v in vesp: 
                 if not self.can_afford(REFINERY):
                     break
                 worker = self.select_build_worker(v.position)
                 if worker is None:
                     break
-                if self.units(REFINERY).closer_than(1.0, v).exists and self.supply_cap > 15:
+                if not self.units(REFINERY).closer_than(1.0, v).exists:
                     await self.do(worker.build(REFINERY, v)) 
 
     #attacking with units 
