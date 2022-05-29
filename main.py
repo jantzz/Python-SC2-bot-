@@ -9,7 +9,7 @@ from sc2.constants import COMMANDCENTER, SCV, SUPPLYDEPOT, REFINERY, BARRACKS, M
 class BigBoy(sc.BotAI):
     async def on_step(self, iteration):
         await self.distribute_workers()
-        await self.send_scout()
+        # await self.send_scout()
 
         if self.supply_workers > 16:
             await self.build_workers()
@@ -26,16 +26,16 @@ class BigBoy(sc.BotAI):
 
         await self.attack()
     
-    #scouting with worker
-    async def send_scout(self):
-        worker = self.units(SCV).ready
-        if worker.exists:
-            await worker.move(self.enemy_start_locations)
+    # #scouting with worker
+    # async def send_scout(self):
+    #     worker = self.units(SCV).ready
+    #     if worker.exists:
+    #         await worker.move(self.enemy_start_locations)
 
     #building workers
     async def build_workers(self):
         for cc in self.units(COMMANDCENTER).ready.noqueue:
-            if self.can_afford(SCV) and self.supply_left <= 2:
+            if self.can_afford(SCV) and self.supply_left < 4:
                 await self.do(cc.train(SCV))
 
     #building supply depots 
@@ -53,16 +53,17 @@ class BigBoy(sc.BotAI):
             if not self.units(BARRACKS).exists:
                 if self.can_afford(BARRACKS):
                     await self.build(BARRACKS, near = ccs.first)
+                    
     #training marines 
     async def train_marines(self):
-        if self.supply_army <= 10:
+        if self.supply_army <= 20:
             for br in self.units(BARRACKS).ready.noqueue:
                 await self.do(br.train(MARINE))
 
     #building refineries 
     async def build_vespene(self):
         for ccs in self.units(COMMANDCENTER).ready: 
-            vesp = self.state.vespene_geyser.closer_than(15.0, ccs)
+            vesp = self.state.vespene_geyser.closer_than(25.0, ccs)
             for v in vesp: 
                 if not self.can_afford(REFINERY):
                     break
