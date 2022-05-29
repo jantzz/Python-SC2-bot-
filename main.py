@@ -11,7 +11,7 @@ class BigBoy(sc.BotAI):
         await self.distribute_workers()
         #await self.send_scout()
 
-        if self.supply_workers > 16:
+        if self.supply_workers < 16:
             await self.build_workers()
 
         await self.build_supplydepo()
@@ -35,8 +35,9 @@ class BigBoy(sc.BotAI):
     #building workers
     async def build_workers(self):
         for cc in self.units(COMMANDCENTER).ready.noqueue:
-            if self.can_afford(SCV) and self.supply_left <= 2:
+            if self.can_afford(SCV) and self.supply_left <= 4:
                 await self.do(cc.train(SCV))
+
 
     #building supply depots 
     async def build_supplydepo(self):
