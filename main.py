@@ -9,6 +9,7 @@ from sc2.constants import COMMANDCENTER, SCV, SUPPLYDEPOT, REFINERY, BARRACKS, M
 class BigBoy(sc.BotAI):
     async def on_step(self, iteration):
         await self.distribute_workers()
+        await self.send_scout()
 
         if self.supply_workers > 16:
             await self.build_workers()
