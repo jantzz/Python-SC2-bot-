@@ -7,3 +7,4 @@ print("you are the imposter")
 print("Hello world")
 if amogus:
     print("Jantz is impustor")
+    print("amognssmomowmofweofewfoewfoewmfoewofmwoefmowmfoewmfomewof")
