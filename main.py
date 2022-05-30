@@ -55,7 +55,7 @@ class BigBoy(sc.BotAI):
 
     #training marines 
     async def train_marines(self):
-        if self.supply_army <= 10:
+        if self.supply_army <= 20:
             for br in self.units(BARRACKS).ready.noqueue:
                 await self.do(br.train(MARINE))
 
