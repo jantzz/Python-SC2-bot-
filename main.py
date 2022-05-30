@@ -11,7 +11,7 @@ class BigBoy(sc.BotAI):
         await self.distribute_workers()
         #await self.send_scout()
 
-        if self.supply_workers < 16:
+        if self.supply_workers < 40:
             await self.build_workers()
 
         await self.build_supplydepo()
@@ -50,9 +50,11 @@ class BigBoy(sc.BotAI):
     async def build_barracks(self):
         ccs = self.units(COMMANDCENTER).ready
         if ccs.exists:
-            if not self.units(BARRACKS).exists:
+            br = self.units(BARRACKS)
+            if br <= 2:
                 if self.can_afford(BARRACKS):
                     await self.build(BARRACKS, near = ccs.first)
+
     #training marines 
     async def train_marines(self):
         if self.supply_army <= 10:
