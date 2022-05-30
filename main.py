@@ -40,7 +40,7 @@ class BigBoy(sc.BotAI):
 
     #building supply depots 
     async def build_supplydepo(self):
-        if self.supply_left < 3 and not self.already_pending(SUPPLYDEPOT):
+        if self.supply_left < 5 and not self.already_pending(SUPPLYDEPOT):
             ccs = self.units(COMMANDCENTER).ready
             if ccs.exists:
                 if self.can_afford(SUPPLYDEPOT):
