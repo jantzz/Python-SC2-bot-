@@ -20,11 +20,7 @@ class BigBoy(sc.BotAI):
 
         if self.units(BARRACKS).exists:
             await self.train_marines()
-
-        if self.units(BARRACKS).exists:
             await self.build_vespene()
-
-        if self.units(BARRACKS).exists:
             await self.expand()
 
         await self.attack()
