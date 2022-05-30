@@ -89,13 +89,12 @@ class BigBoy(sc.BotAI):
 
     #finding enemy units
     def find_enemy(self, state):
-        if len(self.known_enemy_units > 0):
+        if len(self.known_enemy_units) > 0:
             return rand.choice(self.known_enemy_units)
-        elif len(self.known_enemy_structures > 0): 
+        elif len(self.known_enemy_structures) > 0: 
             return rand.choice(self.known_enemy_structures)
         else:
             return self.enemy_start_locations[0]
-
 
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Terran, BigBoy()), 
