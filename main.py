@@ -40,7 +40,7 @@ class BigBoy(sc.BotAI):
 
     #building supply depots 
     async def build_supplydepo(self):
-        if self.supply_left < 3 and not self.already_pending(SUPPLYDEPOT):
+        if self.supply_left < 5 and not self.already_pending(SUPPLYDEPOT):
             ccs = self.units(COMMANDCENTER).ready
             if ccs.exists:
                 if self.can_afford(SUPPLYDEPOT):
@@ -79,23 +79,22 @@ class BigBoy(sc.BotAI):
 
     #attacking with units 
     async def attack(self):
-        if self.units(MARINE).amount > 9:
+        if self.units(MARINE).amount > 14:
+            for u in self.units(MARINE).idle:
+                await self.do(u.attack(self.find_enemy(self.state)))
+        elif self.units(MARINE).amount > 9:
             if len(self.known_enemy_units) > 0:
                 for u in self.units(MARINE).idle:
                     await self.do(u.attack(rand.choice(self.known_enemy_units)))
-        elif self.units(MARINE).amount > 14:
-            for u in self.units(MARINE).idle:
-                await self.do(u.attack(self.find_enemy(self.state)))
 
     #finding enemy units
     def find_enemy(self, state):
-        if len(self.known_enemy_units > 0):
+        if len(self.known_enemy_units) > 0:
             return rand.choice(self.known_enemy_units)
-        elif len(self.known_enemy_structures > 0): 
+        elif len(self.known_enemy_structures) > 0: 
             return rand.choice(self.known_enemy_structures)
         else:
             return self.enemy_start_locations[0]
-
 
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Terran, BigBoy()), 
