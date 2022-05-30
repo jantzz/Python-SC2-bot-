@@ -24,6 +24,9 @@ class BigBoy(sc.BotAI):
         if self.units(BARRACKS).exists:
             await self.build_vespene()
 
+        if self.units(BARRACKS).exists:
+            await self.expand()
+
         await self.attack()
     
     #scouting with worker
@@ -72,6 +75,11 @@ class BigBoy(sc.BotAI):
                     break
                 if not self.units(REFINERY).closer_than(1.0, v).exists:
                     await self.do(worker.build(REFINERY, v)) 
+
+    #expanding 
+    async def expand(self):
+        if self.units(COMMANDCENTER).amount < 2 and self.can_afford(COMMANDCENTER):
+            await self.expand_now()
 
     #attacking with units 
     async def attack(self):
