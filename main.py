@@ -79,13 +79,13 @@ class BigBoy(sc.BotAI):
 
     #attacking with units 
     async def attack(self):
-        if self.units(MARINE).amount > 9:
+        if self.units(MARINE).amount > 14:
+            for u in self.units(MARINE).idle:
+                await self.do(u.attack(self.find_enemy(self.state)))
+        elif self.units(MARINE).amount > 9:
             if len(self.known_enemy_units) > 0:
                 for u in self.units(MARINE).idle:
                     await self.do(u.attack(rand.choice(self.known_enemy_units)))
-        elif self.units(MARINE).amount > 14:
-            for u in self.units(MARINE).idle:
-                await self.do(u.attack(self.find_enemy(self.state)))
 
     #finding enemy units
     def find_enemy(self, state):
