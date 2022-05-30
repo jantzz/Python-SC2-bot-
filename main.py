@@ -11,7 +11,7 @@ class BigBoy(sc.BotAI):
         await self.distribute_workers()
         #await self.send_scout()
 
-        if self.supply_workers < 16:
+        if self.supply_workers < 40:
             await self.build_workers()
 
         await self.build_supplydepo()
@@ -20,9 +20,8 @@ class BigBoy(sc.BotAI):
 
         if self.units(BARRACKS).exists:
             await self.train_marines()
-
-        if self.units(BARRACKS).exists:
             await self.build_vespene()
+            await self.expand()
 
         await self.attack()
     
@@ -51,27 +50,32 @@ class BigBoy(sc.BotAI):
     async def build_barracks(self):
         ccs = self.units(COMMANDCENTER).ready
         if ccs.exists:
-            if not self.units(BARRACKS).exists:
-                if self.can_afford(BARRACKS):
+            if self.units(BARRACKS).amount <= 2 and self.can_afford(BARRACKS):
                     await self.build(BARRACKS, near = ccs.first)
+
     #training marines 
     async def train_marines(self):
-        if self.supply_army <= 10:
+        if self.supply_army <= 20:
             for br in self.units(BARRACKS).ready.noqueue:
                 await self.do(br.train(MARINE))
 
     #building refineries 
     async def build_vespene(self):
         for ccs in self.units(COMMANDCENTER).ready: 
-            vesp = self.state.vespene_geyser.closer_than(15.0, ccs)
+            vesp = self.state.vespene_geyser.closer_than(10.0, ccs)
             for v in vesp: 
                 if not self.can_afford(REFINERY):
                     break
                 worker = self.select_build_worker(v.position)
                 if worker is None:
                     break
-                if self.units(REFINERY).closer_than(1.0, v).exists and self.supply_cap > 15:
+                if not self.units(REFINERY).closer_than(1.0, v).exists:
                     await self.do(worker.build(REFINERY, v)) 
+
+    #expanding 
+    async def expand(self):
+        if self.units(COMMANDCENTER).amount < 2 and self.can_afford(COMMANDCENTER):
+            await self.expand_now()
 
     #attacking with units 
     async def attack(self):
