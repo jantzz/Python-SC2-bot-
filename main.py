@@ -50,9 +50,7 @@ class BigBoy(sc.BotAI):
     async def build_barracks(self):
         ccs = self.units(COMMANDCENTER).ready
         if ccs.exists:
-            br = self.units(BARRACKS)
-            if br <= 2:
-                if self.can_afford(BARRACKS):
+            if self.units(BARRACKS).amount <= 2 and self.can_afford(BARRACKS):
                     await self.build(BARRACKS, near = ccs.first)
 
     #training marines 
