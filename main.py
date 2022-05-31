@@ -4,7 +4,7 @@ import random as rand
 import sc2 as sc
 from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
-from sc2.constants import COMMANDCENTER, SCV, SUPPLYDEPOT, REFINERY, BARRACKS, MARINE
+from sc2.constants import COMMANDCENTER, SCV, SUPPLYDEPOT, REFINERY, BARRACKS, MARINE, REAPER, HELLION, FACTORY, ORBITALCOMMAND
 
 # add timing
 
@@ -54,7 +54,7 @@ class BigBoy(sc.BotAI):
     async def build_barracks(self):
         ccs = self.units(COMMANDCENTER).ready
         if ccs.exists:
-            if self.units(BARRACKS).amount <= 2 and self.can_afford(BARRACKS):
+            if self.supply_used == 15 and not self.already.pending(BARRACKS) and self.can_afford(BARRACKS):
                     await self.build(BARRACKS, near = ccs.first)
 
     #training marines 
@@ -62,6 +62,11 @@ class BigBoy(sc.BotAI):
         if self.supply_army <= 20:
             for br in self.units(BARRACKS).ready.noqueue:
                 await self.do(br.train(MARINE))
+
+    async def train_reaper(self):
+        if self.supply_army <= 20:
+            for br in self.units(BARRACKS).ready.noqueue:
+                await self.do(br.train(REAPER))
 
     #building refineries 
     async def build_vespene(self):
@@ -75,6 +80,9 @@ class BigBoy(sc.BotAI):
                     break
                 if not self.units(REFINERY).closer_than(1.0, v).exists:
                     await self.do(worker.build(REFINERY, v)) 
+
+    #building a factory
+        
 
     #expanding 
     async def expand(self):
