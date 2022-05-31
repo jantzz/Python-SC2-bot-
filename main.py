@@ -6,6 +6,8 @@ from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
 from sc2.constants import COMMANDCENTER, SCV, SUPPLYDEPOT, REFINERY, BARRACKS, MARINE
 
+# add timing
+
 class BigBoy(sc.BotAI):
     async def on_step(self, iteration):
         await self.distribute_workers()
