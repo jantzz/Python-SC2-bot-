@@ -23,6 +23,7 @@ class BigBoy(sc.BotAI):
         if self.units(BARRACKS).exists:
             await self.train_marines()
             await self.build_vespene()
+            await self.build_orbital
             await self.expand()
             await self.build_factory()
 
@@ -40,9 +41,16 @@ class BigBoy(sc.BotAI):
             if self.supply_used < 16 and self.can_afford(SCV):
                 await self.do(cc.train(SCV))
             elif self.supply_used == 16 and self.units(BARRACKS).exists:
-                if self.supply_used == 20 and self.units(FACTORY).exists:
-                    if self.supply_used == 66 and self.units(BARRACKS) > 2 and self.can_afford(SCV):
+                if self.supply_used < 19 and self.can_afford(SCV):
+                    await self.do(cc.train(SCV))
+                elif self.supply_used == 19 and self.units(ORBITALCOMMAND).exists:
+                    if self.supply_used < 20 and self.can_afford(SCV):
                         await self.do(cc.train(SCV))
+                    elif self.supply_used == 20 and self.units(FACTORY).exists:
+                        if self.supply_used < 66 and self.can_afford(SCV):
+                            await self.do(cc.train(SCV))
+                        elif self.supply_used == 66 and self.units(BARRACKS) > 2 and self.can_afford(SCV):
+                            await self.do(cc.train(SCV))
 
 
     #building supply depots 
@@ -69,8 +77,14 @@ class BigBoy(sc.BotAI):
     async def build_factory(self):
             ccs = self.units(COMMANDCENTER).ready
             if ccs.exists:
-                if self.supply_used >= 20 and not self.already_pending(FACTORY) and self.can_afford(FACTORY):
+                if self.supply_used == 20 and not self.already_pending(FACTORY) and self.can_afford(FACTORY):
                     await self.build(FACTORY, near = ccs.first)
+    #building orbital command
+    async def build_orbital(self):
+        ccs = self.units(COMMANDCENTER).ready  
+        if ccs.exists:
+            if self.supply_used == 19 and not self.already_pending_upgrade(ORBITALCOMMAND) and self.can_afford(ORBITALCOMMAND):
+                await self.do(ccs.research(ORBITALCOMMAND))
 
     #training marines 
     async def train_marines(self):
@@ -99,7 +113,7 @@ class BigBoy(sc.BotAI):
 
     #expanding 
     async def expand(self):
-        if self.units(COMMANDCENTER).amount < 2 and self.can_afford(COMMANDCENTER):
+        if self.units(COMMANDCENTER).amount < 2 and self.can_afford(COMMANDCENTER) and self.supply_used > 22:
             await self.expand_now()
 
     #attacking with units 
