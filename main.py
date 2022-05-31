@@ -40,16 +40,16 @@ class BigBoy(sc.BotAI):
         for cc in self.units(COMMANDCENTER).ready.noqueue:
             if self.supply_used < 16 and self.can_afford(SCV):
                 await self.do(cc.train(SCV))
-            elif self.supply_used == 16 and self.units(BARRACKS).exists:
+            elif self.supply_used >= 16 and self.units(BARRACKS).exists:
                 if self.supply_used < 19 and self.can_afford(SCV):
                     await self.do(cc.train(SCV))
-                elif self.supply_used == 19 and self.units(ORBITALCOMMAND).exists:
+                elif self.supply_used >= 19 and self.units(ORBITALCOMMAND).exists:
                     if self.supply_used < 20 and self.can_afford(SCV):
                         await self.do(cc.train(SCV))
-                    elif self.supply_used == 20 and self.units(FACTORY).exists:
+                    elif self.supply_used >= 20 and self.units(FACTORY).exists:
                         if self.supply_used < 66 and self.can_afford(SCV):
                             await self.do(cc.train(SCV))
-                        elif self.supply_used == 66 and self.units(BARRACKS) > 2 and self.can_afford(SCV):
+                        elif self.supply_used >= 66 and self.units(BARRACKS) > 2 and self.can_afford(SCV):
                             await self.do(cc.train(SCV))
 
 
