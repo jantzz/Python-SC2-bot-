@@ -36,7 +36,7 @@ class BigBoy(sc.BotAI):
     #building workers
     async def build_workers(self):
         for cc in self.units(COMMANDCENTER).ready.noqueue:
-            if self.can_afford(SCV) and self.supply_left <= 4:
+            if self.can_afford(SCV):
                 await self.do(cc.train(SCV))
 
 
