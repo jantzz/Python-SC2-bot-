@@ -37,8 +37,12 @@ class BigBoy(sc.BotAI):
     #building workers
     async def build_workers(self):
         for cc in self.units(COMMANDCENTER).ready.noqueue:
-            if self.can_afford(SCV):
+            if self.supply_used < 16 and self.can_afford(SCV):
                 await self.do(cc.train(SCV))
+            elif self.supply_used == 16 and self.units(BARRACKS).exists:
+                if self.supply_used == 20 and self.units(FACTORY).exists:
+                    if self.supply_used == 66 and self.units(BARRACKS) > 2 and self.can_afford(SCV):
+                        await self.do(cc.train(SCV))
 
 
     #building supply depots 
@@ -55,12 +59,18 @@ class BigBoy(sc.BotAI):
     async def build_barracks(self):
         ccs = self.units(COMMANDCENTER).ready
         if ccs.exists:
-            if self.supply_used == 15 or self.supply_used == 66: 
+            if self.supply_used == 16 or self.supply_used == 66: 
                 if self.supply_used == 66 and self.units(BARRACKS) <= 3: 
                     if not self.already_pending(BARRACKS) and self.can_afford(BARRACKS):
                         await self.build(BARRACKS, near = ccs.first)
                 if not self.already_pending(BARRACKS) and self.can_afford(BARRACKS):
                     await self.build(BARRACKS, near = ccs.first)
+    #building a factory
+    async def build_factory(self):
+            ccs = self.units(COMMANDCENTER).ready
+            if ccs.exists:
+                if self.supply_used >= 20 and not self.already_pending(FACTORY) and self.can_afford(FACTORY):
+                    await self.build(FACTORY, near = ccs.first)
 
     #training marines 
     async def train_marines(self):
@@ -86,13 +96,6 @@ class BigBoy(sc.BotAI):
                     break
                 if not self.units(REFINERY).closer_than(1.0, v).exists:
                     await self.do(worker.build(REFINERY, v)) 
-
-    #building a factory
-    async def build_factory(self):
-            ccs = self.units(COMMANDCENTER).ready
-            if ccs.exists:
-                if self.supply_used >= 20 and not self.already_pending(FACTORY) and self.can_afford(FACTORY):
-                    await self.build(FACTORY, near = ccs.first)
 
     #expanding 
     async def expand(self):
