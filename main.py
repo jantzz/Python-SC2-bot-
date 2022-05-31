@@ -67,8 +67,9 @@ class BigBoy(sc.BotAI):
             for br in self.units(BARRACKS).ready.noqueue:
                 await self.do(br.train(MARINE))
 
+    #training reapers
     async def train_reaper(self):
-        if self.supply_army <= 20:
+        if self.supply_used == 19:
             for br in self.units(BARRACKS).ready.noqueue:
                 await self.do(br.train(REAPER))
 
