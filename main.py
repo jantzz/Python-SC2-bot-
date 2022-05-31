@@ -42,9 +42,11 @@ class BigBoy(sc.BotAI):
 
     #building supply depots 
     async def build_supplydepo(self):
-        if self.supply_left < 5 and not self.already_pending(SUPPLYDEPOT):
-            ccs = self.units(COMMANDCENTER).ready
-            if ccs.exists:
+        ccs = self.units(COMMANDCENTER).ready
+        if  ccs.exists:
+            if self.supply_used == 14 and not self.already_pending(SUPPLYDEPOT) and self.can_afford(SUPPLYDEPOT):
+                await self.build(SUPPLYDEPOT, near = ccs.first)
+            elif self.supply_left < 5 and not self.already_pending(SUPPLYDEPOT):
                 if self.can_afford(SUPPLYDEPOT):
                     await self.build(SUPPLYDEPOT, near = ccs.first)
 
