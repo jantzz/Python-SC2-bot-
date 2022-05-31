@@ -24,6 +24,7 @@ class BigBoy(sc.BotAI):
             await self.train_marines()
             await self.build_vespene()
             await self.expand()
+            await self.build_factory()
 
         await self.attack()
     
@@ -87,7 +88,11 @@ class BigBoy(sc.BotAI):
                     await self.do(worker.build(REFINERY, v)) 
 
     #building a factory
-        
+    async def build_factory(self):
+            ccs = self.units(COMMANDCENTER).ready
+            if ccs.exists:
+                if self.supply_used >= 20 and not self.already_pending(FACTORY) and self.can_afford(FACTORY):
+                    await self.build(FACTORY, near = ccs.first)
 
     #expanding 
     async def expand(self):
