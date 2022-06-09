@@ -4,7 +4,7 @@ import random as rand
 import sc2 as sc
 from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
-from sc2.constants import COMMANDCENTER, SCV, SUPPLYDEPOT, REFINERY, BARRACKS, MARINE, REAPER, HELLION, FACTORY, ORBITALCOMMAND
+from sc2.constants import COMMANDCENTER, SCV, SUPPLYDEPOT, REFINERY, BARRACKS, MARINE, REAPER, HELLION, FACTORY, ORBITALCOMMAND, UPGRADETOORBITAL_ORBITALCOMMAND 
 
 # add timing
 
@@ -23,7 +23,7 @@ class BigBoy(sc.BotAI):
         if self.units(BARRACKS).exists:
             await self.train_marines()
             await self.build_vespene()
-            await self.build_orbital
+            await self.build_orbital()
             await self.expand()
             await self.build_factory()
 
@@ -37,20 +37,18 @@ class BigBoy(sc.BotAI):
 
     #building workers
     async def build_workers(self):
-        for cc in self.units(COMMANDCENTER).ready.noqueue:
-            if self.supply_used < 16 and self.can_afford(SCV):
-                await self.do(cc.train(SCV))
-            elif self.supply_used >= 16 and self.units(BARRACKS).exists:
-                if self.supply_used < 19 and self.can_afford(SCV):
+        if self.supply_workers < 80:
+            for cc in self.units(COMMANDCENTER).ready.idle:
+                if self.supply_used < 16: 
+                    await self.do(cc.train(SCV))
+                elif self.supply_used >= 16 and self.units(BARRACKS).exists:
                     await self.do(cc.train(SCV))
                 elif self.supply_used >= 19 and self.units(ORBITALCOMMAND).exists:
-                    if self.supply_used < 20 and self.can_afford(SCV):
-                        await self.do(cc.train(SCV))
-                    elif self.supply_used >= 20 and self.units(FACTORY).exists:
-                        if self.supply_used < 66 and self.can_afford(SCV):
-                            await self.do(cc.train(SCV))
-                        elif self.supply_used >= 66 and self.units(BARRACKS) > 2 and self.can_afford(SCV):
-                            await self.do(cc.train(SCV))
+                    await self.do(cc.train(SCV))
+                elif self.supply_used >= 20 and self.units(FACTORY).exists:
+                    await self.do(cc.train(SCV))
+                elif self.supply_used >= 66 and self.units(BARRACKS) > 2:
+                    await self.do(cc.train(SCV))
 
 
     #building supply depots 
@@ -77,25 +75,26 @@ class BigBoy(sc.BotAI):
     async def build_factory(self):
             ccs = self.units(COMMANDCENTER).ready
             if ccs.exists:
-                if self.supply_used == 20 and not self.already_pending(FACTORY) and self.can_afford(FACTORY):
-                    await self.build(FACTORY, near = ccs.first)
+                if self.supply_used > 18 and self.supply_used < 21:
+                    if not self.already_pending(FACTORY) and self.can_afford(FACTORY):
+                        await self.build(FACTORY, near = ccs.first)
     #building orbital command
     async def build_orbital(self):
-        ccs = self.units(COMMANDCENTER).ready  
-        if ccs.exists:
-            if self.supply_used == 19 and not self.already_pending_upgrade(ORBITALCOMMAND) and self.can_afford(ORBITALCOMMAND):
-                await self.do(ccs.research(ORBITALCOMMAND))
+        for ccs in self.units(COMMANDCENTER).ready.idle:
+            if self.supply_used == 19 and self.can_afford(ORBITALCOMMAND):
+                await self.do(ccs.research(UPGRADETOORBITAL_ORBITALCOMMAND))
 
     #training marines 
     async def train_marines(self):
-        if self.supply_army <= 20:
-            for br in self.units(BARRACKS).ready.noqueue:
-                await self.do(br.train(MARINE))
+        if self.units(ORBITALCOMMAND).exists:
+            if self.supply_army <= 20:
+                for br in self.units(BARRACKS).ready.idle:
+                    await self.do(br.train(MARINE))
 
     #training reapers
     async def train_reaper(self):
         if self.supply_used == 19:
-            for br in self.units(BARRACKS).ready.noqueue:
+            for br in self.units(BARRACKS).ready.idle:
                 await self.do(br.train(REAPER))
 
     #building refineries 
@@ -138,4 +137,4 @@ class BigBoy(sc.BotAI):
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Terran, BigBoy()), 
     Computer(Race.Terran, Difficulty.Easy)
-], realtime=True)
+], realtime=False)
